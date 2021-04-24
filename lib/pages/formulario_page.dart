@@ -26,7 +26,6 @@ class ComboBox extends StatefulWidget {
   @override
   _ComboBoxState createState() => _ComboBoxState();
 }
-
 class _ComboBoxState extends State<ComboBox> {
 
   List<String> _ciudades = ['Lima','Cuzco','Piura','Tumbes'];
