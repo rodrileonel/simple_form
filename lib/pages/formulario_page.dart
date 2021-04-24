@@ -14,9 +14,57 @@ class InputPage extends StatelessWidget {
           CajaEmail(),
           CajaPassword(),
           CajaFecha(),
+          ComboBox()
         ]
       )
     );
+  }
+}
+
+class ComboBox extends StatefulWidget {
+
+  @override
+  _ComboBoxState createState() => _ComboBoxState();
+}
+
+class _ComboBoxState extends State<ComboBox> {
+
+  List<String> _ciudades = ['Lima','Cuzco','Piura','Tumbes'];
+  String _actual = 'Lima';
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children:[
+            Icon(Icons.select_all),
+            Expanded(
+              child: DropdownButton(
+                value: _actual,
+                items: getItems(),
+                onChanged: (option){
+                  setState(() {});
+                  _actual = option;
+                },
+              ),
+            )
+          ]
+        ),
+        Text(_actual)
+      ],
+    );
+  }
+
+  List<DropdownMenuItem<String>> getItems() {
+    List<DropdownMenuItem<String>> options = List();
+    _ciudades.map((ciudad) => options.add(
+      DropdownMenuItem(
+        child: Text(ciudad),
+        value: ciudad,
+      )
+    )).toList();
+    return options;
   }
 }
 
@@ -27,10 +75,12 @@ class CajaFecha extends StatefulWidget {
 class _CajaFechaState extends State<CajaFecha> {
   
   String _fecha = '';
+  TextEditingController _textController = TextEditingController();
   
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: _textController,
       decoration: InputDecoration(
         suffixIcon: Icon(Icons.email_outlined, color: Colors.green,),
         prefixIcon: Icon(Icons.account_circle, color: Colors.green,),
@@ -40,17 +90,27 @@ class _CajaFechaState extends State<CajaFecha> {
           borderRadius: BorderRadius.circular(20)
         )
       ),
-      onChanged: (valor){
-        setState(() {});
-        _selectDate();
+      onTap: (){
+        FocusScope.of(context).requestFocus(FocusNode());
+        _selectDate(context);
       },
     );
   }
 
-  void _selectDate(){
+  void _selectDate(BuildContext context) async {
+    DateTime date = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2022),
+      initialDate: DateTime.now(),
+    );
 
+    if(date!=null){
+      setState(() {});
+      _fecha = date.toString();
+      _textController.text = _fecha;
+    }
   }
-
 }
 
 class CajaPassword extends StatefulWidget {
